@@ -5,7 +5,7 @@ import random
 WIDTH = 800
 HEIGHT = 600
 win = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Game")
+pygame.display.set_caption("Wandering on the Street")
 
 # Load the background image
 background_image = pygame.image.load("background.png")  # Replace "background.png" with the path to your background image
@@ -84,6 +84,9 @@ game_over_font = pygame.font.SysFont(None, 80)
 # Font for buttons
 button_font = pygame.font.SysFont(None, 32)
 
+# Load the button click sound effect
+button_sound = pygame.mixer.Sound("Blop Sound.mp3")  # Replace "Blop Sound.mp3" with the path to your sound effect file
+
 # Create the "Start" button
 start_text = button_font.render("Start", True, (0, 0, 0))
 start_rect = start_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
@@ -101,6 +104,17 @@ START_SCREEN = 0
 GAME_SCREEN = 1
 GAME_OVER_SCREEN = 2
 current_screen = START_SCREEN
+
+# Initialize the mixer module
+pygame.mixer.init()
+
+# Load and play the background music
+pygame.mixer.music.load("Rinne - Letter.mp3")  # Replace "Rinne - Letter.mp3" with the path to your music file
+pygame.mixer.music.play(-1)  # Play the background music in a loop
+
+# Adjust the volume of the background music
+pygame.mixer.music.set_volume(0.5)  # Adjust the volume level as needed
+
 
 # Game loop
 running = True
@@ -121,12 +135,15 @@ while running:
             if current_screen == START_SCREEN and start_rect.collidepoint(event.pos):
                 current_screen = GAME_SCREEN
                 game_started = True
+                button_sound.play()  # Play the button click sound effect
             elif current_screen == GAME_OVER_SCREEN:
                 if restart_rect.collidepoint(event.pos):
                     current_screen = GAME_SCREEN
                     game_started = True
+                    button_sound.play()  # Play the button click sound effect
                 elif quit_rect.collidepoint(event.pos):
                     running = False
+                    button_sound.play()  # Play the button click sound effect
         elif event.type == pygame.KEYDOWN:
             if current_screen == GAME_SCREEN and event.key == pygame.K_SPACE and not is_jumping:
                 is_jumping = True
